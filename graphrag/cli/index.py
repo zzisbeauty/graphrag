@@ -148,19 +148,13 @@ def _run_index(
     if enabled_logging:
         info(f"Logging enabled at {log_path}", True)
     else:
-        info(
-            f"Logging not enabled for config {redact(config.model_dump())}",
-            True,
-        )
+        info(f"Logging not enabled for config {redact(config.model_dump())}", True,)
 
     if not skip_validation:
         validate_config_names(progress_logger, config)
 
     info(f"Starting pipeline run. {dry_run=}", verbose)
-    info(
-        f"Using default configuration: {redact(config.model_dump())}",
-        verbose,
-    )
+    info(f"Using default configuration: {redact(config.model_dump())}", verbose,)
 
     if dry_run:
         info("Dry run complete, exiting...", True)
@@ -183,9 +177,7 @@ def _run_index(
 
     progress_logger.stop()
     if encountered_errors:
-        error(
-            "Errors occurred during the pipeline run, see logs for more details.", True
-        )
+        error("Errors occurred during the pipeline run, see logs for more details.", True)
     else:
         success("All workflows completed successfully.", True)
 

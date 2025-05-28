@@ -12,6 +12,13 @@ tests/fixtures/*/cache
 tests/fixtures/*/output
 output/lancedb
 
+# RAG 依赖的 graph 图数据以及这类图数据生成以来的配置文件；
+prompts.cp.del
+.env.cp.del
+settings.yaml.cp.del
+# 这是一个用于服务 hanwei rag 的图数据 test demo，包含了图数据的配置文件和图数据本身；
+hanweirag-graph-test 
+
 
 # Random
 .DS_Store
@@ -52,7 +59,7 @@ docsite/
 .pnp*
 
 # PyCharm
-.idea/
+.idea/  
 
 # Jupyter notebook
 .ipynb_checkpoints/
