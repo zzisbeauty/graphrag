@@ -5,7 +5,7 @@
 
 import logging
 
-from graphrag.config.embeddings import get_embedded_fields, get_embedding_settings
+from graphrag.config.get_embedding_settings import get_embedding_settings
 from graphrag.config.models.graph_rag_config import GraphRagConfig
 from graphrag.index.run.utils import get_update_storages
 from graphrag.index.typing.context import PipelineRunContext
@@ -21,7 +21,7 @@ async def run_workflow(
     context: PipelineRunContext,
 ) -> WorkflowFunctionOutput:
     """Update the text embeddings from a incremental index run."""
-    logger.info("Updating Text Embeddings")
+    logger.info("Workflow started: update_text_embeddings")
     output_storage, _, _ = get_update_storages(
         config, context.state["update_timestamp"]
     )
@@ -34,7 +34,7 @@ async def run_workflow(
         "incremental_update_merged_community_reports"
     ]
 
-    embedded_fields = get_embedded_fields(config)
+    embedded_fields = config.embed_text.names
     text_embed = get_embedding_settings(config)
     result = await generate_text_embeddings(
         documents=final_documents_df,
@@ -55,4 +55,5 @@ async def run_workflow(
                 output_storage,
             )
 
+    logger.info("Workflow completed: update_text_embeddings")
     return WorkflowFunctionOutput(result=None)

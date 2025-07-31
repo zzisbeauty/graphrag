@@ -42,20 +42,7 @@ class InputFileType(str, Enum):
         return f'"{self.value}"'
 
 
-class InputType(str, Enum):
-    """The input type for the pipeline."""
-
-    file = "file"
-    """The file storage type."""
-    blob = "blob"
-    """The blob storage type."""
-
-    def __repr__(self):
-        """Get a string representation."""
-        return f'"{self.value}"'
-
-
-class OutputType(str, Enum):
+class StorageType(str, Enum):
     """The output type for the pipeline."""
 
     file = "file"
@@ -77,23 +64,8 @@ class ReportingType(str, Enum):
 
     file = "file"
     """The file reporting configuration type."""
-    console = "console"
-    """The console reporting configuration type."""
     blob = "blob"
     """The blob reporting configuration type."""
-
-    def __repr__(self):
-        """Get a string representation."""
-        return f'"{self.value}"'
-
-
-class TextEmbeddingTarget(str, Enum):
-    """The target to use for text embeddings."""
-
-    all = "all"
-    required = "required"
-    selected = "selected"
-    none = "none"
 
     def __repr__(self):
         """Get a string representation."""
@@ -165,6 +137,10 @@ class IndexingMethod(str, Enum):
     """Traditional GraphRAG indexing, with all graph construction and summarization performed by a language model."""
     Fast = "fast"
     """Fast indexing, using NLP for graph construction and language model for summarization."""
+    StandardUpdate = "standard-update"
+    """Incremental update with standard indexing."""
+    FastUpdate = "fast-update"
+    """Incremental update with fast indexing."""
 
 
 class NounPhraseExtractorType(str, Enum):
@@ -176,3 +152,15 @@ class NounPhraseExtractorType(str, Enum):
     """Noun phrase extractor based on dependency parsing and NER using SpaCy."""
     CFG = "cfg"
     """Noun phrase extractor combining CFG-based noun-chunk extraction and NER."""
+
+
+class ModularityMetric(str, Enum):
+    """Enum for the modularity metric to use."""
+
+    Graph = "graph"
+    """Graph modularity metric."""
+
+    LCC = "lcc"
+
+    WeightedComponents = "weighted_components"
+    """Weighted components modularity metric."""

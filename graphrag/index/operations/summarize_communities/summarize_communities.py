@@ -24,7 +24,7 @@ from graphrag.index.operations.summarize_communities.utils import (
 from graphrag.index.utils.derive_from_rows import derive_from_rows
 from graphrag.logger.progress import progress_ticker
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 async def summarize_communities(
@@ -45,10 +45,6 @@ async def summarize_communities(
     strategy_exec = load_strategy(strategy["type"])
     strategy_config = {**strategy}
 
-    # if max_retries is not set, inject a dynamically assigned value based on the total number of expected LLM calls to be made
-    if strategy_config.get("llm") and strategy_config["llm"]["max_retries"] == -1:
-        strategy_config["llm"]["max_retries"] = len(nodes)
-
     community_hierarchy = (
         communities.explode("children")
         .rename({"children": "sub_community"}, axis=1)
@@ -68,7 +64,7 @@ async def summarize_communities(
         )
         level_contexts.append(level_context)
 
-    for level_context in level_contexts:
+    for i, level_context in enumerate(level_contexts):
 
         async def run_generate(record):
             result = await _generate_report(
@@ -89,6 +85,7 @@ async def summarize_communities(
             callbacks=NoopWorkflowCallbacks(),
             num_threads=num_threads,
             async_type=async_mode,
+            progress_msg=f"level {levels[i]} summarize communities progress: ",
         )
         reports.extend([lr for lr in local_reports if lr is not None])
 

@@ -23,7 +23,7 @@ from graphrag.index.operations.extract_covariates.typing import (
 from graphrag.index.utils.derive_from_rows import derive_from_rows
 from graphrag.language_model.manager import ModelManager
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 DEFAULT_ENTITY_TYPES = ["organization", "person", "geo", "event"]
@@ -41,7 +41,7 @@ async def extract_covariates(
     num_threads: int = 4,
 ):
     """Extract claims from a piece of text."""
-    log.debug("extract_covariates strategy=%s", strategy)
+    logger.debug("extract_covariates strategy=%s", strategy)
     if entity_types is None:
         entity_types = DEFAULT_ENTITY_TYPES
 
@@ -49,10 +49,6 @@ async def extract_covariates(
 
     strategy = strategy or {}
     strategy_config = {**strategy}
-
-    # if max_retries is not set, inject a dynamically assigned value based on the total number of expected LLM calls to be made
-    if strategy_config.get("llm") and strategy_config["llm"]["max_retries"] == -1:
-        strategy_config["llm"]["max_retries"] = len(input)
 
     async def run_strategy(row):
         text = row[column]
@@ -75,6 +71,7 @@ async def extract_covariates(
         callbacks,
         async_type=async_mode,
         num_threads=num_threads,
+        progress_msg="extract covariates progress: ",
     )
     return pd.DataFrame([item for row in results for item in row or []])
 
@@ -114,8 +111,8 @@ async def run_extract_claims(
         model_invoker=llm,
         extraction_prompt=extraction_prompt,
         max_gleanings=max_gleanings,
-        on_error=lambda e, s, d: (
-            callbacks.error("Claim Extraction Error", e, s, d) if callbacks else None
+        on_error=lambda e, s, d: logger.error(
+            "Claim Extraction Error", exc_info=e, extra={"stack": s, "details": d}
         ),
     )
 

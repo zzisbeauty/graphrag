@@ -33,7 +33,7 @@ models:
     concurrent_requests: {language_model_defaults.concurrent_requests} # max number of simultaneous LLM requests allowed
     async_mode: {language_model_defaults.async_mode.value} # or asyncio
     retry_strategy: native
-    max_retries: -1                   # set to -1 for dynamic retry logic (most optimal setting based on server response)
+    max_retries: {language_model_defaults.max_retries}
     tokens_per_minute: {language_model_defaults.tokens_per_minute}              # set to null to disable rate limiting
     requests_per_minute: {language_model_defaults.requests_per_minute}            # set to null to disable rate limiting
   {defs.DEFAULT_EMBEDDING_MODEL_ID}:
@@ -51,16 +51,18 @@ models:
     concurrent_requests: {language_model_defaults.concurrent_requests} # max number of simultaneous LLM requests allowed
     async_mode: {language_model_defaults.async_mode.value} # or asyncio
     retry_strategy: native
-    max_retries: -1                   # set to -1 for dynamic retry logic (most optimal setting based on server response)
-    tokens_per_minute: {language_model_defaults.tokens_per_minute}              # set to null to disable rate limiting
-    requests_per_minute: {language_model_defaults.requests_per_minute}            # set to null to disable rate limiting
+    max_retries: {language_model_defaults.max_retries}
+    tokens_per_minute: null              # set to null to disable rate limiting or auto for dynamic
+    requests_per_minute: null            # set to null to disable rate limiting or auto for dynamic
 
 ### Input settings ###
 
 input:
-  type: {graphrag_config_defaults.input.type.value} # or blob
+  storage:
+    type: {graphrag_config_defaults.input.storage.type.value} # or blob
+    base_dir: "{graphrag_config_defaults.input.storage.base_dir}"
   file_type: {graphrag_config_defaults.input.file_type.value} # [csv, text, json]
-  base_dir: "{graphrag_config_defaults.input.base_dir}"
+  
 
 chunks:
   size: {graphrag_config_defaults.chunks.size}
