@@ -119,7 +119,7 @@ def _initialize_cli(
 def _index_cli(
     config: Path | None = typer.Option(
         None,
-        "--config",
+        "--config", 
         "-c",
         help="The configuration to use.",
         exists=True,
