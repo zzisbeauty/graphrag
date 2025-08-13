@@ -46,20 +46,22 @@
 #     requests_per_minute: null            # set to null to disable rate limiting or auto for dynamic
 
 
-
+# 对于自定义模型，当指定 encoding_model: cl100k_base 时，GraphRAG 就不会尝试通过 tiktoken 自动检测 qwen3:4b 的编码器，而是直接使用您指定的编码模型。
 models:
   default_chat_model:  
-    type: openai_chat  
-    api_base: http://10.30.30.97:11434/v1  # Ollama 的 API 端点  
+    type: openai_chat #  告诉 GraphRAG 使用 OpenAI 兼容的客户端
+    api_base: http://10.30.30.97:11434/v1  # Ollama 的 API 端点，兼容 openai 的接口
     api_key: "ollama"  # Ollama 不需要真实的 API key，但字段必须存在  
     model: qwen3:4b  # 您在 Ollama 中安装的模型名称  
-    model_supports_json: true  
+    model_supports_json: true
+    encoding_model: cl100k_base  # 添加这行来明确指定编码模型 ，保证 graphrag 再使用模型前能够准确识别并应用本地部署的模型
 
   default_embedding_model:  
     type: openai_embedding  
     api_base: http://10.30.30.97:11434/v1  
     api_key: "ollama"  
     model: bge-m3:latest  # 或其他支持嵌入的模型
+    encoding_model: cl100k_base  # 添加这行来明确指定编码模型 ，保证 graphrag 再使用模型前能够准确识别并应用本地部署的模型
 
 
 
@@ -70,7 +72,7 @@ input:
     type: file # or blob
     base_dir: "input"
   file_type: text # [csv, text, json]
-  
+
 
 chunks:
   size: 1200
